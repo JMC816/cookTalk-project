@@ -1,9 +1,10 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { GetCook, GetIngredient } from "../api";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Modal from "../components/modal";
+import { useCookies } from "react-cookie";
 
 export interface RecipeProp {
   COOKRCP01: {
@@ -276,24 +277,9 @@ const sidlerVariants = {
   }),
 };
 
-const offset = 4;
-
-const random = [
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-  Math.floor(Math.random() * 1001),
-];
-
 export default function Search() {
+  const [cookies, setCookies] = useCookies();
+  const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
   const [ingredient, setIngredient] = useState("");
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
@@ -367,6 +353,43 @@ export default function Search() {
     setRecipe(i);
     setModal((prev) => !prev);
   };
+
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  };
+
+  const getExpiresDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  };
+
+  const generateRandomNumbers = () => {
+    return Array.from({ length: 12 }, () => Math.floor(Math.random() * 1001));
+  };
+
+  const saveRandomNumbers = () => {
+    const random = generateRandomNumbers();
+    const expires = getExpiresDate();
+
+    setCookies("randomNumbers", random, { path: "/", expires });
+    setCookies("randomNumbersDate", getTodayDate(), { path: "/", expires });
+    setRandomNumbers(random);
+  };
+
+  useEffect(() => {
+    const storeDate = cookies["randomNumbersDate"];
+    const todayDate = getTodayDate();
+
+    if (!storeDate || storeDate !== todayDate) {
+      saveRandomNumbers();
+    } else if (cookies.randomNumbers) {
+      setRandomNumbers(cookies.randomNumbers);
+    }
+  }, [cookies, setCookies]);
+
   return (
     <Modal
       setModal={setModal}
@@ -395,28 +418,26 @@ export default function Search() {
               transition={{ type: "tween", duration: 1 }}
               key={index}
             >
-              {random
-                .slice(offset * index, offset * index + offset)
-                .map((i) => (
-                  <SliderItem key={i}>
-                    <Recipes
-                      onClick={() => barModalOpenClick(i)}
-                      style={{
-                        backgroundImage: `url(${
-                          data?.COOKRCP01.row
-                            ? data?.COOKRCP01.row[i].ATT_FILE_NO_MAIN
-                            : "로딩 중..."
-                        })`,
-                        backgroundSize: "cover",
-                      }}
-                    />
-                    <RecipesTitle>
-                      {data?.COOKRCP01.row
-                        ? data?.COOKRCP01.row[i].RCP_NM
-                        : "로딩 중..."}
-                    </RecipesTitle>
-                  </SliderItem>
-                ))}
+              {randomNumbers.slice(4 * index, 4 * index + 4).map((i) => (
+                <SliderItem key={i}>
+                  <Recipes
+                    onClick={() => barModalOpenClick(i)}
+                    style={{
+                      backgroundImage: `url(${
+                        data?.COOKRCP01.row
+                          ? data?.COOKRCP01.row[i].ATT_FILE_NO_MAIN
+                          : "로딩 중..."
+                      })`,
+                      backgroundSize: "cover",
+                    }}
+                  />
+                  <RecipesTitle>
+                    {data?.COOKRCP01.row
+                      ? data?.COOKRCP01.row[i].RCP_NM
+                      : "로딩 중..."}
+                  </RecipesTitle>
+                </SliderItem>
+              ))}
             </Slider>
           </AnimatePresence>
         </RandomCook>
