@@ -373,9 +373,10 @@ export default function Search() {
   const saveRandomNumbers = () => {
     const random = generateRandomNumbers();
     const expires = getExpiresDate();
+    const today = getTodayDate();
 
     setCookies("randomNumbers", random, { path: "/", expires });
-    setCookies("randomNumbersDate", getTodayDate(), { path: "/", expires });
+    setCookies("randomNumbersDate", today, { path: "/", expires });
     setRandomNumbers(random);
   };
 
@@ -388,7 +389,7 @@ export default function Search() {
     } else if (cookies.randomNumbers) {
       setRandomNumbers(cookies.randomNumbers);
     }
-  }, [cookies, setCookies]);
+  }, [cookies]);
 
   return (
     <Modal
