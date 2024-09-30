@@ -6,7 +6,7 @@ const HomeWrapper = styled.div`
   place-items: center;
   grid-template-rows: 5fr 1fr;
   flex-direction: column;
-  background-color: #f2f2f2;
+  background-color: #fae6b1;
   height: calc(var(--vh, 1vh) * 100);
 `;
 

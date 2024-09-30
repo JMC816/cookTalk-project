@@ -11,7 +11,7 @@ const CreatAccountWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #f2f2f2;
+  background-color: #fae6b1;
   height: calc(var(--vh, 1vh) * 100);
 `;
 
@@ -23,8 +23,8 @@ const CreateAccountView = styled.form`
   justify-content: center;
   width: 300px;
   height: 300px;
-  background-color: #c2c2c2;
   border-radius: 15px;
+  background-color: #c9b88d;
 `;
 
 const Input = styled.input`
