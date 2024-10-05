@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { auth } from "../firebase";
 import { FirebaseError } from "firebase/app";
 import GoogleButton from "../components/google-btn";
+import GithubButton from "../components/github-btn";
 
 const CreatAccountWrapper = styled.div`
   display: flex;
@@ -128,6 +129,7 @@ export default function CreateAccount() {
         {error !== "" ? error : null}
       </CreateAccountView>
       <GoogleButton />
+      <GithubButton />
     </CreatAccountWrapper>
   );
 }

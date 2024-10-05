@@ -5,6 +5,7 @@ import { auth } from "../firebase";
 import { FirebaseError } from "firebase/app";
 import { useState } from "react";
 import GoogleButton from "../components/google-btn";
+import GithubButton from "../components/github-btn";
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -107,6 +108,7 @@ export default function Login() {
         {error !== "" ? error : null}
       </LoginView>
       <GoogleButton />
+      <GithubButton />
     </LoginWrapper>
   );
 }
