@@ -86,7 +86,7 @@ export default function ChatRooms({
     setProfile(upload);
   };
   useEffect(() => {
-    img();
+    img;
   }, []);
   return (
     <ChatRoomsWrapper onClick={onMoveChatRoom}>
